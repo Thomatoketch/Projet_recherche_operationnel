@@ -1,3 +1,6 @@
+import tabulate
+import sys
+
 def nord_ouest(dimension, provisions, commandes):
     m = int(dimension[0])
     n = int(dimension[1])
@@ -23,36 +26,259 @@ def nord_ouest(dimension, provisions, commandes):
     return proposition
 
 
-def balas_hammer(dimension, provisions, commandes, couts):
-    m = int(dimension[0])
-    n = int(dimension[1])
 
+def balas_hammer(dimension, provisions, commandes, couts):
+    m = int(dimension[1])
+    n = int(dimension[0])
+    temp =[]
+    
     # Initialiser la proposition de transport avec des zéros
     proposition = [[0] * m for _ in range(n)]
+    matrice_rempli = [[0] * m for _ in range(n)]
 
     # Variables pour suivre les index des lignes et colonnes
     i = 0
     j = 0
 
     while True:
-        # Trouver la cellule la moins chère et la remplir autant que possible
-        min_cout = float('inf')
-        min_i = None
-        min_j = None
-        for i in range(n):
-            for j in range(m):
-                if provisions[i] > 0 and commandes[j] > 0:
-                    cout = couts[i][j]
-                    if cout < min_cout:
-                        min_cout = cout
-                        min_i = i
-                        min_j = j
-        if min_cout == float('inf'):
-            break
+        choix_penalité = {}
+        penalites_lignes, penalites_colonnes, penalite_max, penalites_multiples = calculer_penalites_balas_hammer(couts, provisions, commandes, matrice_rempli)
+        print("Pénalités par ligne :", penalites_lignes)
+        print("Pénalités par colonne :", penalites_colonnes)
+        print("Pénalité maximale :", penalite_max)
+        print("Indices des pénalités maximales multiples :", penalites_multiples)
+        
+        if len(penalites_multiples) > 1:
+            for ligne in penalites_multiples :
+                temp = []
+                if ligne < n :
+                    for i in range(m):
+                        if matrice_rempli[ligne][i] == 0 :
+                            temp.append(couts[ligne][i])
+                        else :
+                            temp.append(sys.maxsize)
+                    min_cout = min(temp)
+                    min_i = ligne
+                    min_j = temp.index(min_cout)
+                else :
+                    for j in range(n):
+                        if matrice_rempli[j][ligne-n] == 0 :
+                            temp.append(couts[j][ligne-n])
+                        else :
+                            temp.append(sys.maxsize)
+                    min_cout = min(temp)
+                    min_i = temp.index(min_cout)
+                    min_j = ligne-n
 
+                quantite = min(provisions[min_i], commandes[min_j])
+                choix_penalité[ligne] = [min_i,min_j,quantite]
+            min_i = choix_penalité[max(choix_penalité, key=lambda k: choix_penalité[k][2])][0]
+            min_j = choix_penalité[max(choix_penalité, key=lambda k: choix_penalité[k][2])][1] 
+        
+        else :    
+            if penalites_multiples[0] < n :
+                n= penalites_multiples[0]
+                for i in range(m):
+                    if matrice_rempli[n][i] == 0 :
+                        temp.append(couts[n][i])
+                    else :
+                        temp.append(sys.maxsize)
+                min_cout = min(temp)
+                min_i = n
+                min_j = temp.index(min_cout)
+            else :
+                m= penalites_multiples[0]-n
+                for j in range(n):
+                    if matrice_rempli[j][m] == 0 :
+                        temp.append(couts[j][m])
+                    else :
+                        temp.append(sys.maxsize)
+                min_cout = min(temp)
+                min_i = temp.index(min_cout)
+                min_j = m
+
+        m = int(dimension[1])
+        n = int(dimension[0])
+        temp = []
+        matrice_rempli[min_i][min_j] = 1
         quantite = min(provisions[min_i], commandes[min_j])
         proposition[min_i][min_j] = quantite
         provisions[min_i] -= quantite
         commandes[min_j] -= quantite
+        
+        if provisions[min_i] == 0 :
+            matrice_rempli[min_i] = [1]*m
+        if commandes[min_j] == 0 :
+            for i in range(n) :
+                matrice_rempli[i][min_j] = 1
+        
+        for i in range(n):
+            if len([i for i, penalite in enumerate(matrice_rempli[i]) if penalite == 1]) == m-1:
+                j = matrice_rempli[i].index(0)
+                quantite = min(provisions[i], commandes[j])
+                proposition[i][j] = quantite
+                provisions[i] -= quantite
+                commandes[j] -= quantite
+                matrice_rempli[i][j] = 1
+                
+        for j in range(m):
+            ligne = 0
+            nombre_occurrences = 0
+            for ligne in matrice_rempli:
+                if j < len(ligne):  # Vérifier si la colonne existe dans la ligne
+                    if ligne[j] == 1:
+                            nombre_occurrences += 1
+            if nombre_occurrences == n-1 :
+                quantite = min(provisions[i], commandes[j])
+                proposition[i][j] = quantite
+                provisions[i] -= quantite
+                commandes[j] -= quantite
+                matrice_rempli[i][j] = 1
+        
+                
+        #print(tabulate.tabulate(matrice_rempli, tablefmt="rounded_grid"))
+        print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
+        print("\n\n\n")
+        
+        if (matrice_rempli == [[1] * m for _ in range(n)] or (provisions == [[0] for _ in range(n)] and commandes == [[0] for _ in range(m)])):
+            return proposition
 
-    return proposition
+
+    
+def calculer_penalites_balas_hammer(proposition, provisions, commandes, matrice_rempli):
+    m = len(commandes)
+    n = len(provisions)
+    couts = [ligne[:] for ligne in proposition]
+    penalites_lignes = []
+    penalites_colonnes = []
+
+    # Calcul des pénalités par ligne et par colonne
+    for i in range(n):
+        penalites_temp = []
+        for j in range(m):
+            if matrice_rempli[i][j] == 0 :
+                penalites_temp.append(couts[i][j])
+        if len(penalites_temp) <= 1 : 
+            penalites_lignes.append(0)
+            continue
+        penalites_ligne = min(penalites_temp)
+        penalites_temp.remove(penalites_ligne)
+        penalites_ligne = min(penalites_temp)- penalites_ligne
+        penalites_lignes.append(penalites_ligne)
+    
+    
+    couts = [ligne[:] for ligne in proposition]
+    for i in range(m):
+        penalites_temp = []
+        for j in range(n):
+            if matrice_rempli[j][i] == 0 :
+                penalites_temp.append(couts[j][i])
+        if len(penalites_temp) <= 1 : 
+            penalites_colonnes.append(0)
+            continue
+        penalites_colonne = min(penalites_temp)
+        penalites_temp.remove(penalites_colonne)
+        penalites_colonne = min(penalites_temp)- penalites_colonne
+        penalites_colonnes.append(penalites_colonne)
+
+    # Trouver la plus grande pénalité
+    penalite_max = max(penalites_lignes + penalites_colonnes)
+
+    # Vérifier si la plus grande pénalité est présente plusieurs fois
+    penalites_multiples = [i for i, penalite in enumerate(penalites_lignes) if penalite == penalite_max] + \
+                          [j + n for j, penalite in enumerate(penalites_colonnes) if penalite == penalite_max]
+
+    return penalites_lignes, penalites_colonnes, penalite_max, penalites_multiples
+
+
+
+def verification_arretes_sommets(proposition):
+    m = len(proposition[0])  # Nombre de colonnes
+    n = len(proposition)     # Nombre de lignes
+    compteur = 0
+    lien = {}
+    for ligne in proposition:
+        for case in ligne:
+            if (case != 0):
+                compteur += 1
+    if compteur == n + m - 1 :
+        return True
+    return False
+        
+
+
+def verification_cycle(proposition):
+    m = len(proposition[0])  # Nombre de colonnes
+    n = len(proposition)     # Nombre de lignes
+
+    def dfs(i, j, visited, parent):
+        visited[i][j] = True
+        neighbors = [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]
+        for ni, nj in neighbors:
+            if 0 <= ni < n and 0 <= nj < m and not visited[ni][nj] and proposition[ni][nj] > 0:
+                if dfs(ni, nj, visited, (i, j)):
+                    return True
+            elif 0 <= ni < n and 0 <= nj < m and visited[ni][nj] and (ni, nj) != parent:
+                return True
+        return False
+
+    visited = [[False] * m for _ in range(n)]
+
+    # Commencez la recherche en profondeur à partir de chaque cellule non affectée
+    for i in range(n):
+        for j in range(m):
+            if proposition[i][j] > 0 and not visited[i][j]:
+                if dfs(i, j, visited, (-1, -1)):
+                    return True
+
+    return False
+
+
+
+def verification_non_degenere(proposition) :
+    if verification_arretes_sommets(proposition) and verification_cycle(proposition) == 0 : 
+        print("La proposition est non-degenere")
+        return True
+    else :
+        if verification_arretes_sommets(proposition) == 0 :
+            print("La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1")
+        if verification_cycle(proposition):
+            print("La proposition est degene car il y a un cycle")
+        return False
+
+
+
+def choix_point_cycle(proposition, cout):
+    m = len(proposition[0])  # Nombre de colonnes
+    n = len(proposition)     # Nombre de lignes
+    dico = {}
+    matrice_cycle = [[0] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m) :
+            matrice_cycle
+            if proposition[i][j] == 0:
+                dico[i,j] = cout[i][j]
+            else :
+                matrice_cycle[i][j] = 1
+    print(dico)
+    for i in range(len(dico)):
+        minimum = min(dico, key=lambda k: dico[k])
+        matrice_cycle[minimum[0]][minimum[-1]] = 1
+        print(tabulate.tabulate(matrice_cycle, tablefmt="rounded_grid"))
+        if verification_cycle(matrice_cycle) :
+            print("creer un cycle")
+            dico.pop(minimum)
+        else :
+            print("ne creer pas de cycle")
+            return minimum, matrice_cycle
+        
+def calcul_potentiel(matrice_cycle, cout):
+    m = len(cout[0])  # Nombre de colonnes
+    n = len(cout)     # Nombre de lignes
+    ligne_cout_potentiel = [0] * n
+    colonne_cout_potentiel = [0] * m
+    for i in range(n):
+        temp = ligne_cout_potentiel[i]
+        for j in range(m):
+            if matrice_cycle[i][j] == 1:
+                colonne_cout_potentiel

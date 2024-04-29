@@ -2,54 +2,49 @@ from pprint import pprint
 import tabulate
 from function import *
 
+numero_fichier = "1"
+restart = ""
+
+while restart != "exit" :
+    numero_fichier = input("Bonjour, veuillez donner le numero du fichier à executé : ")
+
+    fichier = "./fichier_test/tableau_"+numero_fichier+".txt"
+
+    with open(fichier, 'r') as fichier:
+        lignes = fichier.readlines()
+
+    # Lire les dimensions de la matrice
+    dimension = list(map(int, lignes[0].split()))
+
+    # Lire les données de la matrice
+    matrice = [list(map(int, ligne.split())) for ligne in lignes[1:]]
+
+    # Séparer la matrice en proposition, provisions, commandes et matrice des coûts
+    matrice_couts = [ligne[:-1] for ligne in matrice[:-1]]
+    provisions = [ligne[-1] for ligne in matrice[:-1]]
+    commandes = matrice[-1]
 
 
-numero_fichier = input("Bonjour, veuillez donner le numero du fichier à executé : ")
+    print("Que voulez vous faire : \n \t1. Matrice des coûts \n \t2. proposition de transport\n \t3. table des couts potentiels\n \t4. table des couts marginaux")
+    restart = input()
+    match restart :
+        # Matrice des couts
+        case "1" :
+            print("Voici la matrice des coûts : ")
+            print(tabulate.tabulate(matrice_couts, tablefmt="rounded_grid"))
 
-fichier = "./fichier_test/tableau_"+numero_fichier+".txt"
+        # Proposition de transport
+        case "2" :
+            proposition_transport = balas_hammer(dimension, provisions, commandes, matrice_couts)
+            if verification_non_degenere(proposition_transport) == False:
+                choix_point_cycle(proposition_transport, matrice_couts)
+                
 
-with open(fichier, 'r') as f:
-    lines = f.readlines()
-    dimensions = lines[0].split(" ")
-    # Diviser la chaîne en lignes
-    lignes = lines[1:]
+        # Table des coûts potentiels
+        case "3" :
+            "dzad"
+            # Exemple d'utilisation
 
-matrice = []
-for ligne in lignes:
-    elements = ligne.split()
-    ligne_matrice = [int(element) for element in elements]
-    matrice.append(ligne_matrice)
-
-
-liste_provisions= []
-for ligne in matrice[:-1]:
-    liste_provisions.append(ligne[-1])
-liste_commandes = [int(element) for element in lines[-1].split()]
-
-
-
-print("Que voulez vous faire : \n \t1. Matrice des coûts \n \t2. proposition de transport\n \t3. table des couts potentiels\n \t4. table des couts margianux")
-match input() :
-    # Matrice des couts
-    case "1" :
-        print("Voici la matrice des coûts : ")
-        print(tabulate.tabulate(matrice, tablefmt="rounded_grid"))
-
-    # Proposition de transport
-    case "2" :
-        print(tabulate.tabulate(balas_hammer(dimensions, liste_provisions, liste_commandes, matrice), tablefmt="rounded_grid"))
-
-    # Table des coûts potentiels
-    case "3" :
-        "dza"
-
-    # Table des coûts marginaux
-    case "4" :
-        "dzad"
-
-
-
-
-
-
-
+        # Table des coûts marginaux
+        case "4" :
+            "dzad"
