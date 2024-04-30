@@ -43,6 +43,14 @@ while restart != "exit" :
         # Table des coûts potentiels
         case "3" :
             "dzad"
+            proposition_transport_avec_cycle = [
+                [0, 10, 20, 30],
+                [40, 0, 50, 60],
+                [70, 80, 0, 90],
+                [100, 110, 120, 0]
+            ]
+            graphe = matrice_vers_dictionnaire_graphe(proposition_transport_avec_cycle)
+            print(detecter_cycle(graphe, "S1"))
             # Exemple d'utilisation
 
         # Table des coûts marginaux

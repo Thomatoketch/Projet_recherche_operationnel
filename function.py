@@ -1,5 +1,6 @@
 import tabulate
 import sys
+from collections import deque
 
 def nord_ouest(dimension, provisions, commandes):
     m = int(dimension[0])
@@ -204,34 +205,87 @@ def verification_arretes_sommets(proposition):
     if compteur == n + m - 1 :
         return True
     return False
-        
 
 
-def verification_cycle(proposition):
-    m = len(proposition[0])  # Nombre de colonnes
-    n = len(proposition)     # Nombre de lignes
+def parcours_largeur(graphe, sommet):
+    if not(sommet in graphe.keys()):
+        return None
+    F = [sommet]
+    liste_sommets = []
+    while len(F) != 0:
+        S = F[0]
+        for voisin in graphe[S]:
+            if not(voisin in liste_sommets) and not(voisin in F):
+                F.append(voisin)
+        liste_sommets.append(F.pop(0))
+    return liste_sommets
 
-    def dfs(i, j, visited, parent):
-        visited[i][j] = True
-        neighbors = [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]
-        for ni, nj in neighbors:
-            if 0 <= ni < n and 0 <= nj < m and not visited[ni][nj] and proposition[ni][nj] > 0:
-                if dfs(ni, nj, visited, (i, j)):
-                    return True
-            elif 0 <= ni < n and 0 <= nj < m and visited[ni][nj] and (ni, nj) != parent:
-                return True
-        return False
+def matrice_vers_dictionnaire_graphe(matrice):
+    graphe = {}
+    n = len(matrice)
 
-    visited = [[False] * m for _ in range(n)]
-
-    # Commencez la recherche en profondeur à partir de chaque cellule non affectée
+    # Ajout des successeurs des lignes
     for i in range(n):
-        for j in range(m):
-            if proposition[i][j] > 0 and not visited[i][j]:
-                if dfs(i, j, visited, (-1, -1)):
-                    return True
+        cle_ligne = "S" + str(i + 1)
+        voisins_ligne = []
+        for j in range(n):
+            if matrice[i][j] > 0:
+                voisins_ligne.append("C" + str(j + 1))
+        graphe[cle_ligne] = tuple(voisins_ligne)
 
-    return False
+    # Ajout des successeurs des colonnes
+    for j in range(n):
+        cle_colonne = "C" + str(j + 1)
+        voisins_colonne = []
+        for i in range(n):
+            if matrice[i][j] > 0:
+                voisins_colonne.append("S" + str(i + 1))
+        graphe[cle_colonne] = tuple(voisins_colonne)
+
+    return graphe
+
+def detecter_cycle(graphe, sommet):
+    if sommet not in graphe.keys():
+        return None
+
+    F = [(sommet, None)]  # Chaque élément de la file F est un tuple (sommet, parent)
+    liste_sommets = set()  # Utiliser un ensemble pour une recherche plus rapide
+    parents = {sommet: None}  # Initialiser avec le sommet de départ comme clé
+
+    # Initialiser le dictionnaire des parents avec toutes les clés possibles du graphe
+    for sommet in graphe.keys():
+        if sommet not in parents:
+            parents[sommet] = None
+
+    while F:
+        S, parent = F.pop(0)
+        liste_sommets.add(S)
+
+        for voisin in graphe[S]:
+            if voisin in parents and voisin != parent:  # Cycle détecté
+                cycle = [voisin]
+                parent_cycle = S
+                while parent_cycle != voisin:
+                    cycle.append(parent_cycle)
+                    parent_cycle = parents[parent_cycle]
+                cycle.append(voisin)
+                return cycle
+            if voisin not in liste_sommets:
+                F.append((voisin, S))
+                parents[voisin] = S
+
+    return None
+
+
+def verification_cycle(graphe):
+    #appel de la fonction de parcours en largeur
+    cycle = parcours_largeur(graphe, "S1")
+    if cycle:
+        print("Il existe un cycle dans la proposition:",cycle)
+        return False  # La proposition n'est pas acyclique
+    print("La proposition est acyclique.")
+    return True  # La proposition est acyclique
+
 
 
 
