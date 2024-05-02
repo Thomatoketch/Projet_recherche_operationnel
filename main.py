@@ -37,22 +37,33 @@ while restart != "exit" :
         case "2" :
             proposition_transport = balas_hammer(dimension, provisions, commandes, matrice_couts)
             if verification_non_degenere(proposition_transport) == False:
-                choix_point_cycle(proposition_transport, matrice_couts)
+                print(choix_point_cycle(proposition_transport, matrice_couts))
                 
 
         # Table des coûts potentiels
         case "3" :
             "dzad"
-            proposition_transport_avec_cycle = [
-                [0, 10, 20, 30],
-                [40, 0, 50, 60],
-                [70, 80, 0, 90],
-                [100, 110, 120, 0]
-            ]
-            graphe = matrice_vers_dictionnaire_graphe(proposition_transport_avec_cycle)
-            print(detecter_cycle(graphe, "S1"))
             # Exemple d'utilisation
+            proposition_transport = balas_hammer(dimension, provisions, commandes, matrice_couts)
+            couts = [
+                [10, 20, 30, 40],  # Ligne 1
+                [50, 60, 70, 80],  # Ligne 2
+                [90, 100, 110, 120]  # Ligne 3
+            ]
+            proposition_transport = [
+                [30, 10, 20, 0],  # Ligne 1
+                [0, 20, 30, 0],  # Ligne 2
+                [10, 0, 0, 20]  # Ligne 3
+            ]
+
+            maximisation_transport(proposition_transport,couts)
 
         # Table des coûts marginaux
         case "4" :
             "dzad"
+            proposition_transport = [
+                [30, 10, 20, 0],  # Ligne 1
+                [0, 20, 30, 0],  # Ligne 2
+                [10, 0, 0, 20]  # Ligne 3
+            ]
+            print(trouver_cycle(proposition_transport,0,0))

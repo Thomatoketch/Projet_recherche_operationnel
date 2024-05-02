@@ -1,6 +1,5 @@
 import tabulate
 import sys
-from collections import deque
 
 def nord_ouest(dimension, provisions, commandes):
     m = int(dimension[0])
@@ -205,87 +204,34 @@ def verification_arretes_sommets(proposition):
     if compteur == n + m - 1 :
         return True
     return False
+        
 
 
-def parcours_largeur(graphe, sommet):
-    if not(sommet in graphe.keys()):
-        return None
-    F = [sommet]
-    liste_sommets = []
-    while len(F) != 0:
-        S = F[0]
-        for voisin in graphe[S]:
-            if not(voisin in liste_sommets) and not(voisin in F):
-                F.append(voisin)
-        liste_sommets.append(F.pop(0))
-    return liste_sommets
+def verification_cycle(proposition):
+    m = len(proposition[0])  # Nombre de colonnes
+    n = len(proposition)     # Nombre de lignes
 
-def matrice_vers_dictionnaire_graphe(matrice):
-    graphe = {}
-    n = len(matrice)
+    def dfs(i, j, visited, parent):
+        visited[i][j] = True
+        neighbors = [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]
+        for ni, nj in neighbors:
+            if 0 <= ni < n and 0 <= nj < m and not visited[ni][nj] and proposition[ni][nj] > 0:
+                if dfs(ni, nj, visited, (i, j)):
+                    return True
+            elif 0 <= ni < n and 0 <= nj < m and visited[ni][nj] and (ni, nj) != parent:
+                return True
+        return False
 
-    # Ajout des successeurs des lignes
+    visited = [[False] * m for _ in range(n)]
+
+    # Commencez la recherche en profondeur à partir de chaque cellule non affectée
     for i in range(n):
-        cle_ligne = "S" + str(i + 1)
-        voisins_ligne = []
-        for j in range(n):
-            if matrice[i][j] > 0:
-                voisins_ligne.append("C" + str(j + 1))
-        graphe[cle_ligne] = tuple(voisins_ligne)
+        for j in range(m):
+            if proposition[i][j] > 0 and not visited[i][j]:
+                if dfs(i, j, visited, (-1, -1)):
+                    return True
 
-    # Ajout des successeurs des colonnes
-    for j in range(n):
-        cle_colonne = "C" + str(j + 1)
-        voisins_colonne = []
-        for i in range(n):
-            if matrice[i][j] > 0:
-                voisins_colonne.append("S" + str(i + 1))
-        graphe[cle_colonne] = tuple(voisins_colonne)
-
-    return graphe
-
-def detecter_cycle(graphe, sommet):
-    if sommet not in graphe.keys():
-        return None
-
-    F = [(sommet, None)]  # Chaque élément de la file F est un tuple (sommet, parent)
-    liste_sommets = set()  # Utiliser un ensemble pour une recherche plus rapide
-    parents = {sommet: None}  # Initialiser avec le sommet de départ comme clé
-
-    # Initialiser le dictionnaire des parents avec toutes les clés possibles du graphe
-    for sommet in graphe.keys():
-        if sommet not in parents:
-            parents[sommet] = None
-
-    while F:
-        S, parent = F.pop(0)
-        liste_sommets.add(S)
-
-        for voisin in graphe[S]:
-            if voisin in parents and voisin != parent:  # Cycle détecté
-                cycle = [voisin]
-                parent_cycle = S
-                while parent_cycle != voisin:
-                    cycle.append(parent_cycle)
-                    parent_cycle = parents[parent_cycle]
-                cycle.append(voisin)
-                return cycle
-            if voisin not in liste_sommets:
-                F.append((voisin, S))
-                parents[voisin] = S
-
-    return None
-
-
-def verification_cycle(graphe):
-    #appel de la fonction de parcours en largeur
-    cycle = parcours_largeur(graphe, "S1")
-    if cycle:
-        print("Il existe un cycle dans la proposition:",cycle)
-        return False  # La proposition n'est pas acyclique
-    print("La proposition est acyclique.")
-    return True  # La proposition est acyclique
-
+    return False
 
 
 
@@ -314,7 +260,6 @@ def choix_point_cycle(proposition, cout):
                 dico[i,j] = cout[i][j]
             else :
                 matrice_cycle[i][j] = 1
-    print(dico)
     for i in range(len(dico)):
         minimum = min(dico, key=lambda k: dico[k])
         matrice_cycle[minimum[0]][minimum[-1]] = 1
@@ -325,7 +270,9 @@ def choix_point_cycle(proposition, cout):
         else :
             print("ne creer pas de cycle")
             return minimum, matrice_cycle
-        
+
+
+
 def calcul_potentiel(matrice_cycle, cout):
     m = len(cout[0])  # Nombre de colonnes
     n = len(cout)     # Nombre de lignes
@@ -336,3 +283,57 @@ def calcul_potentiel(matrice_cycle, cout):
         for j in range(m):
             if matrice_cycle[i][j] == 1:
                 colonne_cout_potentiel
+
+
+def maximisation_transport(proposition, couts):
+    while verification_cycle(proposition):
+        print("Cycle détecté, maximisation en cours...")
+
+        # Afficher les conditions pour chaque case
+        # Parcourir la proposition de transport
+        for i in range(len(proposition)):
+            for j in range(len(proposition[0])):
+                # Si la case est remplie
+                if proposition[i][j] > 0:
+                    print(f"Case [{i}, {j}] - {proposition[i][j]} unités")
+                    # Vous pouvez ajouter des informations supplémentaires ici, comme les coûts, etc.
+
+        # Afficher les arêtes supprimées à l'issue de la maximisation
+        arêtes_supprimées = []
+        while verification_cycle(proposition):
+            point_cycle, matrice_cycle = choix_point_cycle(proposition, couts)
+            arêtes_supprimées.append(point_cycle)
+            proposition[point_cycle[0]][point_cycle[1]] = 0
+            print(f"Arête supprimée : {point_cycle}")
+
+        print("Maximisation terminée.\n")
+
+    print("Pas de cycle détecté, la proposition est optimale.")
+    return proposition
+
+
+def trouver_cycle(proposition, start_i, start_j):
+    m = len(proposition[0])  # Nombre de colonnes
+    n = len(proposition)  # Nombre de lignes
+
+    visited = [[False] * m for _ in range(n)]
+    cycle = []
+
+    def dfs(i, j, parent_i, parent_j):
+        if visited[i][j]:
+            return True
+        visited[i][j] = True
+
+        neighbors = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
+        for ni, nj in neighbors:
+            if 0 <= ni < n and 0 <= nj < m and (ni != parent_i or nj != parent_j) and proposition[ni][nj] > 0:
+                if dfs(ni, nj, i, j):
+                    cycle.append((ni, nj))
+                    return True
+        return False
+
+    if dfs(start_i, start_j, -1, -1):
+        cycle.append((start_i, start_j))
+        return cycle
+    else:
+        return []
