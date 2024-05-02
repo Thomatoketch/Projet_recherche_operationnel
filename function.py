@@ -260,7 +260,6 @@ def choix_point_cycle(proposition, cout):
                 dico[i,j] = cout[i][j]
             else :
                 matrice_cycle[i][j] = 1
-    print(dico)
     for i in range(len(dico)):
         minimum = min(dico, key=lambda k: dico[k])
         matrice_cycle[minimum[0]][minimum[-1]] = 1
@@ -271,7 +270,9 @@ def choix_point_cycle(proposition, cout):
         else :
             print("ne creer pas de cycle")
             return minimum, matrice_cycle
-        
+
+
+
 def calcul_potentiel(matrice_cycle, cout):
     m = len(cout[0])  # Nombre de colonnes
     n = len(cout)     # Nombre de lignes
@@ -282,3 +283,57 @@ def calcul_potentiel(matrice_cycle, cout):
         for j in range(m):
             if matrice_cycle[i][j] == 1:
                 colonne_cout_potentiel
+
+
+def maximisation_transport(proposition, couts):
+    while verification_cycle(proposition):
+        print("Cycle détecté, maximisation en cours...")
+
+        # Afficher les conditions pour chaque case
+        # Parcourir la proposition de transport
+        for i in range(len(proposition)):
+            for j in range(len(proposition[0])):
+                # Si la case est remplie
+                if proposition[i][j] > 0:
+                    print(f"Case [{i}, {j}] - {proposition[i][j]} unités")
+                    # Vous pouvez ajouter des informations supplémentaires ici, comme les coûts, etc.
+
+        # Afficher les arêtes supprimées à l'issue de la maximisation
+        arêtes_supprimées = []
+        while verification_cycle(proposition):
+            point_cycle, matrice_cycle = choix_point_cycle(proposition, couts)
+            arêtes_supprimées.append(point_cycle)
+            proposition[point_cycle[0]][point_cycle[1]] = 0
+            print(f"Arête supprimée : {point_cycle}")
+
+        print("Maximisation terminée.\n")
+
+    print("Pas de cycle détecté, la proposition est optimale.")
+    return proposition
+
+
+def trouver_cycle(proposition, start_i, start_j):
+    m = len(proposition[0])  # Nombre de colonnes
+    n = len(proposition)  # Nombre de lignes
+
+    visited = [[False] * m for _ in range(n)]
+    cycle = []
+
+    def dfs(i, j, parent_i, parent_j):
+        if visited[i][j]:
+            return True
+        visited[i][j] = True
+
+        neighbors = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
+        for ni, nj in neighbors:
+            if 0 <= ni < n and 0 <= nj < m and (ni != parent_i or nj != parent_j) and proposition[ni][nj] > 0:
+                if dfs(ni, nj, i, j):
+                    cycle.append((ni, nj))
+                    return True
+        return False
+
+    if dfs(start_i, start_j, -1, -1):
+        cycle.append((start_i, start_j))
+        return cycle
+    else:
+        return []
