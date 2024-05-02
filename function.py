@@ -273,16 +273,30 @@ def choix_point_cycle(proposition, cout):
 
 
 
-def calcul_potentiel(matrice_cycle, cout):
-    m = len(cout[0])  # Nombre de colonnes
-    n = len(cout)     # Nombre de lignes
-    ligne_cout_potentiel = [0] * n
-    colonne_cout_potentiel = [0] * m
-    for i in range(n):
-        temp = ligne_cout_potentiel[i]
+def calcul_des_potentiels(proposition, couts):
+    m = len(proposition[0])  # Nombre de colonnes
+    n = len(proposition)     # Nombre de lignes
+    
+    # Définition des listes ligne et colonne avec maxsize pour la vérification de colonne non modifiée
+    potentiels_lignes = [sys.maxsize] * n
+    potentiels_colonnes = [sys.maxsize] * m
+    
+    # Définition de S1 à 0
+    potentiels_lignes[0] = 0
+
+    # Calcul des coûts
+    for i in range(n ):
         for j in range(m):
-            if matrice_cycle[i][j] == 1:
-                colonne_cout_potentiel
+            if proposition[i][j] > 0:
+
+                # On vérifie si on a calculé le coût potentiel de la ligne
+                if(potentiels_lignes[i] != sys.maxsize):
+                    potentiels_colonnes[j] = potentiels_lignes[i] - couts[i][j]
+                
+                else:
+                    potentiels_lignes[i] = couts[i][j] + potentiels_colonnes[j]
+    
+    return potentiels_lignes, potentiels_colonnes
 
 
 def maximisation_transport(proposition, couts):

@@ -56,7 +56,14 @@ while restart != "exit" :
                 [10, 0, 0, 20]  # Ligne 3
             ]
 
-            maximisation_transport(proposition_transport,couts)
+            # maximisation_transport(proposition_transport,couts)
+
+            potentiels_lignes, potentiels_colonnes = calcul_des_potentiels(proposition_transport, couts)
+
+            print("Ligne des coûts potentiels : ", potentiels_lignes)
+            print("Colonne des coûts potentiels : ", potentiels_colonnes)       
+
+            
 
         # Table des coûts marginaux
         case "4" :
