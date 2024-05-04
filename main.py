@@ -45,23 +45,36 @@ while restart != "exit" :
             "dzad"
             # Exemple d'utilisation
             proposition_transport = balas_hammer(dimension, provisions, commandes, matrice_couts)
-            couts = [
-                [10, 20, 30, 40],  # Ligne 1
-                [50, 60, 70, 80],  # Ligne 2
-                [90, 100, 110, 120]  # Ligne 3
-            ]
-            proposition_transport = [
-                [30, 10, 20, 0],  # Ligne 1
-                [0, 20, 30, 0],  # Ligne 2
-                [10, 0, 0, 20]  # Ligne 3
-            ]
+            degenere = verification_non_degenere(proposition_transport)
+            matrice_arrete_ajoute = clone_matrice(proposition_transport)
 
-            # maximisation_transport(proposition_transport,couts)
 
-            potentiels_lignes, potentiels_colonnes = calcul_des_potentiels(proposition_transport, couts)
+            while degenere != 0 :
+                if degenere == 1:
+                    cout_arrete, arrete_non_degenere = choix_point_cycle(matrice_arrete_ajoute, matrice_couts)
+                    matrice_arrete_ajoute[arrete_non_degenere[0]][arrete_non_degenere[1]] = 1
+                else :
+                    proposition_transport = maximisation_transport(proposition_transport)
+                degenere = verification_non_degenere(matrice_arrete_ajoute)
+
+
+            potentiels_lignes, potentiels_colonnes = calcul_des_potentiels(matrice_couts, matrice_arrete_ajoute)
 
             print("Ligne des coûts potentiels : ", potentiels_lignes)
-            print("Colonne des coûts potentiels : ", potentiels_colonnes)       
+            print("Colonne des coûts potentiels : ", potentiels_colonnes)
+
+            matrice_potentiels = calcul_matrice_couts_potentiels(potentiels_lignes, potentiels_colonnes)
+            print(tabulate.tabulate(matrice_potentiels, tablefmt="rounded_grid"))
+
+            matrice_marginaux = calcul_matrice_couts_marginaux(matrice_potentiels, matrice_couts)
+            print(tabulate.tabulate(matrice_marginaux, tablefmt="rounded_grid"))
+
+            minimum, arrete = arrete_ameliorante(matrice_marginaux)
+            if minimum >= 0:
+                print(
+                    "Il n'y a pas d'arrete améliorante car toutes les valeurs de la matrice des couts marginaux sont positives")
+            else:
+                print(f"l'arrete la plus améliorante est : {arrete} avec un valeur de {minimum}")
 
             
 
@@ -73,4 +86,23 @@ while restart != "exit" :
                 [0, 20, 30, 0],  # Ligne 2
                 [10, 0, 0, 20]  # Ligne 3
             ]
-            print(trouver_cycle(proposition_transport,0,0))
+            matrice_couts = [
+                [10, 20, 30, 40],  # Ligne 1
+                [50, 60, 70, 80],  # Ligne 2
+                [90, 100, 110, 120]  # Ligne 3
+            ]
+            potentiels_lignes, potentiels_colonnes = calcul_des_potentiels(proposition_transport, matrice_couts)
+
+            print("Ligne des coûts potentiels : ", potentiels_lignes)
+            print("Colonne des coûts potentiels : ", potentiels_colonnes)
+
+            matrice_potentiels = calcul_matrice_couts_potentiels(potentiels_lignes,potentiels_colonnes)
+            print(tabulate.tabulate(matrice_potentiels, tablefmt="rounded_grid"))
+
+            matrice_marginaux = calcul_matrice_couts_marginaux(matrice_potentiels, matrice_couts)
+            print(tabulate.tabulate(matrice_marginaux, tablefmt="rounded_grid"))
+
+            minimum, arrete = arrete_ameliorante(matrice_marginaux)
+            if minimum >= 0: print("Il n'y a pas d'arrete améliorante car toutes les valeurs de la matrice des couts marginaux sont positives")
+            else : print(f"l'arrete la plus améliorante est : {arrete} avec un valeur de {minimum}")
+    break

@@ -1,5 +1,6 @@
 import tabulate
 import sys
+MAX = 500000000000000
 
 def nord_ouest(dimension, provisions, commandes):
     m = int(dimension[0])
@@ -135,8 +136,7 @@ def balas_hammer(dimension, provisions, commandes, couts):
                 commandes[j] -= quantite
                 matrice_rempli[i][j] = 1
         
-                
-        #print(tabulate.tabulate(matrice_rempli, tablefmt="rounded_grid"))
+
         print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
         print("\n\n\n")
         
@@ -238,13 +238,14 @@ def verification_cycle(proposition):
 def verification_non_degenere(proposition) :
     if verification_arretes_sommets(proposition) and verification_cycle(proposition) == 0 : 
         print("La proposition est non-degenere")
-        return True
+        return 0
     else :
         if verification_arretes_sommets(proposition) == 0 :
             print("La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1")
+            return 1
         if verification_cycle(proposition):
             print("La proposition est degene car il y a un cycle")
-        return False
+            return 2
 
 
 
@@ -263,40 +264,44 @@ def choix_point_cycle(proposition, cout):
     for i in range(len(dico)):
         minimum = min(dico, key=lambda k: dico[k])
         matrice_cycle[minimum[0]][minimum[-1]] = 1
-        print(tabulate.tabulate(matrice_cycle, tablefmt="rounded_grid"))
         if verification_cycle(matrice_cycle) :
             print("creer un cycle")
             dico.pop(minimum)
         else :
             print("ne creer pas de cycle")
-            return minimum, matrice_cycle
+            for i in range(n):
+                for j in range(m):
+                    if matrice_cycle[i][j] == 1 and proposition[i][j] == 0 :
+                        return minimum, (i,j)
 
 
 
-def calcul_des_potentiels(proposition, couts):
-    m = len(proposition[0])  # Nombre de colonnes
-    n = len(proposition)     # Nombre de lignes
+def calcul_des_potentiels(couts, matrice_arrete):
+    m = len(matrice_arrete[0])  # Nombre de colonnes
+    n = len(matrice_arrete)     # Nombre de lignes
     
     # Définition des listes ligne et colonne avec maxsize pour la vérification de colonne non modifiée
-    potentiels_lignes = [sys.maxsize] * n
-    potentiels_colonnes = [sys.maxsize] * m
-    
+    potentiels_lignes = [-MAX] * n
+    potentiels_colonnes = [-MAX] * m
+    k=0
+
+
     # Définition de S1 à 0
     potentiels_lignes[0] = 0
-
     # Calcul des coûts
-    for i in range(n ):
-        for j in range(m):
-            if proposition[i][j] > 0:
+    while -MAX in potentiels_lignes or -MAX in potentiels_colonnes :
+        print(potentiels_lignes)
+        print(potentiels_colonnes)
+        for i in range(n):
+            for j in range(m):
+                if matrice_arrete[i][j] != 0:
 
-                # On vérifie si on a calculé le coût potentiel de la ligne
-                if(potentiels_lignes[i] != sys.maxsize):
-                    potentiels_colonnes[j] = potentiels_lignes[i] - couts[i][j]
-                
-                else:
-                    potentiels_lignes[i] = couts[i][j] + potentiels_colonnes[j]
-    
+                    if potentiels_lignes[i] == -MAX and potentiels_colonnes[j] != -MAX:
+                        potentiels_lignes[i] = couts[i][j] + potentiels_colonnes[j]
+                    elif potentiels_colonnes[j] == -MAX and potentiels_lignes[i] != -MAX:
+                        potentiels_colonnes[j] = potentiels_lignes[i] - couts[i][j]
     return potentiels_lignes, potentiels_colonnes
+
 
 
 def maximisation_transport(proposition, couts):
@@ -326,6 +331,7 @@ def maximisation_transport(proposition, couts):
     return proposition
 
 
+
 def trouver_cycle(proposition, start_i, start_j):
     m = len(proposition[0])  # Nombre de colonnes
     n = len(proposition)  # Nombre de lignes
@@ -351,3 +357,53 @@ def trouver_cycle(proposition, start_i, start_j):
         return cycle
     else:
         return []
+
+
+
+def calcul_matrice_couts_potentiels(ligne_potentiel, colonne_potentiels):
+    matrice_potentiels = []
+    for ligne in ligne_potentiel:
+        temp = []
+        for colonne in colonne_potentiels :
+            temp.append(int(ligne) - int(colonne))
+        matrice_potentiels.append(temp)
+    return matrice_potentiels
+
+
+
+def calcul_matrice_couts_marginaux(matrice_potentiels, matrice_couts):
+    n = len(matrice_couts)
+    m = len(matrice_couts[0])
+    matrice_marginaux = [[0] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            matrice_marginaux[i][j] = matrice_couts[i][j] - matrice_potentiels[i][j]
+    return matrice_marginaux
+
+
+
+def arrete_ameliorante(matrice_marginaux):
+    n = len(matrice_marginaux)
+    m = len(matrice_marginaux[0])
+    index = 0
+    minimum = sys.maxsize
+    for i in range(n) :
+        for j in range(m):
+            if matrice_marginaux[i][j] < minimum :
+                minimum = matrice_marginaux[i][j]
+                index = (i,j)
+    return minimum, index
+
+
+
+def clone_matrice(matrice):
+    clone = []
+    for ligne in matrice:
+        nouvelle_ligne = []
+        for valeur in ligne:
+            if valeur != 0:
+                nouvelle_ligne.append(1)
+            else:
+                nouvelle_ligne.append(0)
+        clone.append(nouvelle_ligne)
+    return clone
