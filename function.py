@@ -2,9 +2,9 @@ import tabulate
 import sys
 MAX = 500000000000000
 
-def nord_ouest(dimension, provisions, commandes):
-    m = int(dimension[0])
-    n = int(dimension[1])
+def nord_ouest(provisions, commandes):
+    n = len(provisions)
+    m = len(commandes)
 
     # Initialiser la proposition de transport avec des zéros
     proposition = [[0] * m for _ in range(n)]
@@ -23,14 +23,14 @@ def nord_ouest(dimension, provisions, commandes):
             i += 1
         if commandes[j] == 0:
             j += 1
-
+    print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
     return proposition
 
 
 
-def balas_hammer(dimension, provisions, commandes, couts):
-    m = int(dimension[1])
-    n = int(dimension[0])
+def balas_hammer(provisions, commandes, couts, ):
+    n = len(provisions)
+    m = len(commandes)
     temp =[]
     
     # Initialiser la proposition de transport avec des zéros
@@ -46,8 +46,8 @@ def balas_hammer(dimension, provisions, commandes, couts):
         penalites_lignes, penalites_colonnes, penalite_max, penalites_multiples = calculer_penalites_balas_hammer(couts, provisions, commandes, matrice_rempli)
         print("Pénalités par ligne :", penalites_lignes)
         print("Pénalités par colonne :", penalites_colonnes)
+        print("Position des arretes maximale :", penalites_multiples)
         print("Pénalité maximale :", penalite_max)
-        print("Indices des pénalités maximales multiples :", penalites_multiples)
         
         if len(penalites_multiples) > 1:
             for ligne in penalites_multiples :
@@ -98,8 +98,9 @@ def balas_hammer(dimension, provisions, commandes, couts):
                 min_i = temp.index(min_cout)
                 min_j = m
 
-        m = int(dimension[1])
-        n = int(dimension[0])
+        print(f"Coordonées de l'arrete rempli : [{min_i},{min_j}]")
+        n = len(provisions)
+        m = len(commandes)
         temp = []
         matrice_rempli[min_i][min_j] = 1
         quantite = min(provisions[min_i], commandes[min_j])
@@ -138,7 +139,7 @@ def balas_hammer(dimension, provisions, commandes, couts):
         
 
         print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
-        print("\n\n\n")
+        print("\n\n")
         
         if (matrice_rempli == [[1] * m for _ in range(n)] or (provisions == [[0] for _ in range(n)] and commandes == [[0] for _ in range(m)])):
             return proposition
@@ -261,6 +262,7 @@ def choix_point_cycle(proposition, cout):
                 dico[i,j] = cout[i][j]
             else :
                 matrice_cycle[i][j] = 1
+
     for i in range(len(dico)):
         minimum = min(dico, key=lambda k: dico[k])
         matrice_cycle[minimum[0]][minimum[-1]] = 1
@@ -283,15 +285,11 @@ def calcul_des_potentiels(couts, matrice_arrete):
     # Définition des listes ligne et colonne avec maxsize pour la vérification de colonne non modifiée
     potentiels_lignes = [-MAX] * n
     potentiels_colonnes = [-MAX] * m
-    k=0
-
 
     # Définition de S1 à 0
     potentiels_lignes[0] = 0
     # Calcul des coûts
     while -MAX in potentiels_lignes or -MAX in potentiels_colonnes :
-        print(potentiels_lignes)
-        print(potentiels_colonnes)
         for i in range(n):
             for j in range(m):
                 if matrice_arrete[i][j] != 0:
