@@ -1,6 +1,8 @@
+import time
 from pprint import pprint
 import tabulate
 from function import *
+from complexite import *
 
 restart = ""
 
@@ -32,7 +34,7 @@ while restart != "exit" :
     commandes = matrice[-1]
 
 
-    print("Que voulez vous faire : \n \t1. Matrice des coûts \n \t2. proposition de transport")
+    print("Que voulez vous faire : \n \t1. Matrice des coûts \n \t2. proposition de transport \n \t3. Complexité")
     restart = input()
     proposition_transport = []
     match restart :
@@ -50,42 +52,61 @@ while restart != "exit" :
                     proposition_transport = nord_ouest(provisions,commandes)
                 case "2":
                     proposition_transport = balas_hammer(provisions,commandes,matrice_couts)
-            couts_total(proposition_transport,matrice_couts)
+            if proposition_transport != [] :
+                couts_total(proposition_transport,matrice_couts)
 
-            degenere = verification_non_degenere(proposition_transport)
-            matrice_arrete_ajoute = clone_matrice(proposition_transport)
+                degenere = verification_non_degenere(proposition_transport)
+                matrice_arrete_ajoute = clone_matrice(proposition_transport)
 
-            while degenere != 0:
-                if degenere == 1:
-                    cout_arrete, arrete_non_degenere = choix_point_cycle(matrice_arrete_ajoute, matrice_couts)
-                    matrice_arrete_ajoute[arrete_non_degenere[0]][arrete_non_degenere[1]] = 1
-                    print(f"L'arrete [{arrete_non_degenere[0]},{arrete_non_degenere[1]}] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.\n")
+                while degenere != 0:
+                    if degenere == 1:
+                        cout_arrete, arrete_non_degenere = choix_point_cycle(matrice_arrete_ajoute, matrice_couts)
+                        matrice_arrete_ajoute[arrete_non_degenere[0]][arrete_non_degenere[1]] = 1
+                        print(f"L'arrete [{arrete_non_degenere[0]},{arrete_non_degenere[1]}] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.\n")
+                    else:
+                        proposition_transport = maximisation_transport(proposition_transport)
+                    degenere = verification_non_degenere(matrice_arrete_ajoute)
+
+                print("Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere")
+                print(tabulate.tabulate(matrice_arrete_ajoute, tablefmt="rounded_grid"))
+                print()
+
+                potentiels_lignes, potentiels_colonnes = calcul_des_potentiels(matrice_couts, matrice_arrete_ajoute)
+
+                print(f"Ligne des coûts potentiels : {potentiels_lignes}")
+                print(f"Colonne des coûts potentiels : {potentiels_colonnes}\n")
+
+                matrice_potentiels = calcul_matrice_couts_potentiels(potentiels_lignes, potentiels_colonnes)
+                print("--Matrice des couts potentiels :--")
+                print(tabulate.tabulate(matrice_potentiels, tablefmt="rounded_grid"))
+
+                matrice_marginaux = calcul_matrice_couts_marginaux(matrice_potentiels, matrice_couts)
+                print("--Matrice des couts marginaux :--")
+                print(tabulate.tabulate(matrice_marginaux, tablefmt="rounded_grid"))
+
+                minimum, arrete = arrete_ameliorante(matrice_marginaux)
+                if minimum >= 0:
+                    print(
+                        "Il n'y a pas d'arrete améliorante car toutes les valeurs de la matrice des couts marginaux sont positives")
                 else:
-                    proposition_transport = maximisation_transport(proposition_transport)
-                degenere = verification_non_degenere(matrice_arrete_ajoute)
+                    print(f"l'arrete la plus améliorante est : {arrete} avec un valeur de {minimum}")
 
-            print("Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere")
-            print(tabulate.tabulate(matrice_arrete_ajoute, tablefmt="rounded_grid"))
-            print()
+        case "3":
+            # Exemple d'utilisation avec une taille de problème de transport de 3x3
+            n = int(input("Veillez donner la taille de la matrice : "))
+            couts_transport, provisions, commandes = generer_probleme_transport(n)
 
-            potentiels_lignes, potentiels_colonnes = calcul_des_potentiels(matrice_couts, matrice_arrete_ajoute)
+            print("Matrice des coûts de transport:")
+            print(tabulate.tabulate(couts_transport, tablefmt="rounded_grid"))
+            print("Provisions:", provisions)
+            print("Commandes:", commandes)
 
-            print(f"Ligne des coûts potentiels : {potentiels_lignes}")
-            print(f"Colonne des coûts potentiels : {potentiels_colonnes}\n")
+            temps_NO = time.clock()
+            proposition_transport = nord_ouest(provisions, commandes)
+            temps_NO = temps_NO - time.clock()
 
-            matrice_potentiels = calcul_matrice_couts_potentiels(potentiels_lignes, potentiels_colonnes)
-            print("--Matrice des couts potentiels :--")
-            print(tabulate.tabulate(matrice_potentiels, tablefmt="rounded_grid"))
-
-            matrice_marginaux = calcul_matrice_couts_marginaux(matrice_potentiels, matrice_couts)
-            print("--Matrice des couts marginaux :--")
-            print(tabulate.tabulate(matrice_marginaux, tablefmt="rounded_grid"))
-
-            minimum, arrete = arrete_ameliorante(matrice_marginaux)
-            if minimum >= 0:
-                print(
-                    "Il n'y a pas d'arrete améliorante car toutes les valeurs de la matrice des couts marginaux sont positives")
-            else:
-                print(f"l'arrete la plus améliorante est : {arrete} avec un valeur de {minimum}")
+            temps_BH = time.clock()
+            proposition_transport = balas_hammer(provisions, commandes, couts_transport)
+            temps_BH = temps_BH - time.clock()
 
     print("\n")
