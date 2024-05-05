@@ -1,0 +1,89 @@
+Bonjour, veuillez donner le numero du fichier à executé : 6
+Que voulez vous faire : 
+ 	1. Matrice des coûts 
+ 	2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport: 
+ 	1. Nord-Ouest 
+ 	2. Balas-Hammer
+2
+Pénalités par ligne : [0, 1, 1]
+Pénalités par colonne : [6, 4, 5, 8]
+Position des arretes maximale : [6]
+Pénalité maximale : 8
+Coordonées de l'arrete rempli : [0,3]
+╭───┬───┬───┬────╮
+│ 0 │ 0 │ 0 │ 25 │
+├───┼───┼───┼────┤
+│ 0 │ 0 │ 0 │  0 │
+├───┼───┼───┼────┤
+│ 0 │ 0 │ 0 │  0 │
+╰───┴───┴───┴────╯
+
+
+
+Pénalités par ligne : [1, 1, 1]
+Pénalités par colonne : [6, 4, 5, 0]
+Position des arretes maximale : [3]
+Pénalité maximale : 6
+Coordonées de l'arrete rempli : [0,0]
+╭────┬───┬───┬────╮
+│ 35 │ 0 │ 0 │ 25 │
+├────┼───┼───┼────┤
+│  0 │ 0 │ 0 │  0 │
+├────┼───┼───┼────┤
+│  0 │ 0 │ 0 │  0 │
+╰────┴───┴───┴────╯
+
+
+
+Pénalités par ligne : [0, 1, 1]
+Pénalités par colonne : [2, 5, 5, 0]
+Position des arretes maximale : [4, 5]
+Pénalité maximale : 5
+Coordonées de l'arrete rempli : [1,1]
+╭────┬────┬────┬────╮
+│ 35 │  0 │  0 │ 25 │
+├────┼────┼────┼────┤
+│  0 │ 30 │  0 │  0 │
+├────┼────┼────┼────┤
+│ 15 │ 45 │ 30 │  0 │
+╰────┴────┴────┴────╯
+
+
+
+Le cout total de la proposition de transport initale est 2945
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───┬───┬───╮
+│ 1 │ 0 │ 0 │ 1 │
+├───┼───┼───┼───┤
+│ 0 │ 1 │ 0 │ 0 │
+├───┼───┼───┼───┤
+│ 1 │ 1 │ 1 │ 0 │
+╰───┴───┴───┴───╯
+
+Ligne des coûts potentiels : [0, 3, 8]
+Colonne des coûts potentiels : [-11, -13, -12, -10]
+
+--Matrice des couts potentiels :--
+╭────┬────┬────┬────╮
+│ 11 │ 13 │ 12 │ 10 │
+├────┼────┼────┼────┤
+│ 14 │ 16 │ 15 │ 13 │
+├────┼────┼────┼────┤
+│ 19 │ 21 │ 20 │ 18 │
+╰────┴────┴────┴────╯
+--Matrice des couts marginaux :--
+╭───┬────┬────┬───╮
+│ 0 │ -1 │ -2 │ 0 │
+├───┼────┼────┼───┤
+│ 3 │  0 │  0 │ 5 │
+├───┼────┼────┼───┤
+│ 0 │  0 │  0 │ 4 │
+╰───┴────┴────┴───╯
+l'arrete la plus améliorante est : (0, 2) avec un valeur de -2
+
+
+Bonjour, veuillez donner le numero du fichier à executé : 

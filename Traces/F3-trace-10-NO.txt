@@ -1,0 +1,56 @@
+Bonjour, veuillez donner le numero du fichier à executé : 10
+Que voulez vous faire :
+        1. Matrice des coûts
+        2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport:
+        1. Nord-Ouest
+        2. Balas-Hammer
+1
+╭─────┬─────┬─────┬─────┬─────┬─────┬─────╮
+│ 500 │   0 │   0 │   0 │   0 │   0 │   0 │
+├─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│   0 │ 500 │   0 │   0 │   0 │   0 │   0 │
+├─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│   0 │   0 │ 500 │ 500 │ 500 │ 500 │ 500 │
+╰─────┴─────┴─────┴─────┴─────┴─────┴─────╯
+Le cout total de la proposition de transport initale est 218500
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [1,0] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [0,2] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───┬───┬───┬───┬───┬───╮
+│ 1 │ 0 │ 1 │ 0 │ 0 │ 0 │ 0 │
+├───┼───┼───┼───┼───┼───┼───┤
+│ 1 │ 1 │ 0 │ 0 │ 0 │ 0 │ 0 │
+├───┼───┼───┼───┼───┼───┼───┤
+│ 0 │ 0 │ 1 │ 1 │ 1 │ 1 │ 1 │
+╰───┴───┴───┴───┴───┴───┴───╯
+
+Ligne des coûts potentiels : [0, -299, 15]
+Colonne des coûts potentiels : [-300, -349, -15, 12, -10, -11, 12]
+
+--Matrice des couts potentiels :--
+╭─────┬─────┬──────┬──────┬──────┬──────┬──────╮
+│ 300 │ 349 │   15 │  -12 │   10 │   11 │  -12 │
+├─────┼─────┼──────┼──────┼──────┼──────┼──────┤
+│   1 │  50 │ -284 │ -311 │ -289 │ -288 │ -311 │
+├─────┼─────┼──────┼──────┼──────┼──────┼──────┤
+│ 315 │ 364 │   30 │    3 │   25 │   26 │    3 │
+╰─────┴─────┴──────┴──────┴──────┴──────┴──────╯
+--Matrice des couts marginaux :--
+╭──────┬──────┬─────┬─────┬─────┬─────┬─────╮
+│    0 │ -329 │   0 │  28 │   7 │   7 │  32 │
+├──────┼──────┼─────┼─────┼─────┼─────┼─────┤
+│    0 │    0 │ 308 │ 341 │ 311 │ 315 │ 330 │
+├──────┼──────┼─────┼─────┼─────┼─────┼─────┤
+│ -265 │ -324 │   0 │   0 │   0 │   0 │   0 │
+╰──────┴──────┴─────┴─────┴─────┴─────┴─────╯
+l'arrete la plus améliorante est : (0, 1) avec un valeur de -329

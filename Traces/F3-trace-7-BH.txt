@@ -1,0 +1,102 @@
+Bonjour, veuillez donner le numero du fichier à executé : 7
+Que voulez vous faire : 
+ 	1. Matrice des coûts 
+ 	2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport: 
+ 	1. Nord-Ouest 
+ 	2. Balas-Hammer
+2
+Pénalités par ligne : [30, 40, 10, 10]
+Pénalités par colonne : [35, 15]
+Position des arretes maximale : [1]
+Pénalité maximale : 40
+Coordonées de l'arrete rempli : [1,0]
+╭─────┬───╮
+│   0 │ 0 │
+├─────┼───┤
+│ 200 │ 0 │
+├─────┼───┤
+│   0 │ 0 │
+├─────┼───┤
+│   0 │ 0 │
+╰─────┴───╯
+
+
+
+Pénalités par ligne : [30, 0, 10, 10]
+Pénalités par colonne : [5, 15]
+Position des arretes maximale : [0]
+Pénalité maximale : 30
+Coordonées de l'arrete rempli : [0,1]
+╭─────┬─────╮
+│   0 │ 100 │
+├─────┼─────┤
+│ 200 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+╰─────┴─────╯
+
+
+
+Pénalités par ligne : [0, 0, 10, 10]
+Pénalités par colonne : [5, 5]
+Position des arretes maximale : [2, 3]
+Pénalité maximale : 10
+Coordonées de l'arrete rempli : [3,1]
+╭─────┬─────╮
+│   0 │ 100 │
+├─────┼─────┤
+│ 200 │   0 │
+├─────┼─────┤
+│ 100 │   0 │
+├─────┼─────┤
+│   0 │ 200 │
+╰─────┴─────╯
+
+
+
+Le cout total de la proposition de transport initale est 16000
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [2,1] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───╮
+│ 0 │ 1 │
+├───┼───┤
+│ 1 │ 0 │
+├───┼───┤
+│ 1 │ 1 │
+├───┼───┤
+│ 0 │ 1 │
+╰───┴───╯
+
+Ligne des coûts potentiels : [0, -20, 20, 15]
+Colonne des coûts potentiels : [-30, -20]
+
+--Matrice des couts potentiels :--
+╭────┬────╮
+│ 30 │ 20 │
+├────┼────┤
+│ 10 │  0 │
+├────┼────┤
+│ 50 │ 40 │
+├────┼────┤
+│ 45 │ 35 │
+╰────┴────╯
+--Matrice des couts marginaux :--
+╭────┬────╮
+│ 20 │  0 │
+├────┼────┤
+│  0 │ 50 │
+├────┼────┤
+│  0 │  0 │
+├────┼────┤
+│  0 │  0 │
+╰────┴────╯
+Il n'y a pas d'arrete améliorante car toutes les valeurs de la matrice des couts marginaux sont positives

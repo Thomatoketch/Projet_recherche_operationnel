@@ -1,0 +1,48 @@
+Bonjour, veuillez donner le numero du fichier à executé : 4
+Que voulez vous faire : 
+ 	1. Matrice des coûts 
+ 	2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport: 
+ 	1. Nord-Ouest 
+ 	2. Balas-Hammer
+2
+Pénalités par ligne : [29, 29]
+Pénalités par colonne : [29, 29]
+Position des arretes maximale : [0, 1, 2, 3]
+Pénalité maximale : 29
+Coordonées de l'arrete rempli : [0,1]
+╭─────┬─────╮
+│   0 │ 600 │
+├─────┼─────┤
+│ 100 │ 400 │
+╰─────┴─────╯
+
+
+
+Le cout total de la proposition de transport initale est 12700
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───╮
+│ 0 │ 1 │
+├───┼───┤
+│ 1 │ 1 │
+╰───┴───╯
+
+Ligne des coûts potentiels : [0, 29]
+Colonne des coûts potentiels : [28, -1]
+
+--Matrice des couts potentiels :--
+╭─────┬────╮
+│ -28 │  1 │
+├─────┼────┤
+│   1 │ 30 │
+╰─────┴────╯
+--Matrice des couts marginaux :--
+╭────┬───╮
+│ 58 │ 0 │
+├────┼───┤
+│  0 │ 0 │
+╰────┴───╯
+Il n'y a pas d'arrete améliorante car toutes les valeurs de la matrice des couts marginaux sont positives

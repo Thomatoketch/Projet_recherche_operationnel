@@ -1,0 +1,188 @@
+Bonjour, veuillez donner le numero du fichier à executé : 9
+Que voulez vous faire : 
+ 	1. Matrice des coûts 
+ 	2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport: 
+ 	1. Nord-Ouest 
+ 	2. Balas-Hammer
+2
+Pénalités par ligne : [5, 8, 1, 4, 37, 22, 18]
+Pénalités par colonne : [1, 2, 1]
+Position des arretes maximale : [4]
+Pénalité maximale : 37
+Coordonées de l'arrete rempli : [4,2]
+╭───┬───┬─────╮
+│ 0 │ 0 │   0 │
+├───┼───┼─────┤
+│ 0 │ 0 │   0 │
+├───┼───┼─────┤
+│ 0 │ 0 │   0 │
+├───┼───┼─────┤
+│ 0 │ 0 │   0 │
+├───┼───┼─────┤
+│ 0 │ 0 │ 100 │
+├───┼───┼─────┤
+│ 0 │ 0 │   0 │
+├───┼───┼─────┤
+│ 0 │ 0 │   0 │
+╰───┴───┴─────╯
+
+
+
+Pénalités par ligne : [10, 40, 1, 4, 0, 33, 46]
+Pénalités par colonne : [1, 2, 0]
+Position des arretes maximale : [6]
+Pénalité maximale : 46
+Coordonées de l'arrete rempli : [6,1]
+╭───┬─────┬─────╮
+│ 0 │   0 │   0 │
+├───┼─────┼─────┤
+│ 0 │   0 │   0 │
+├───┼─────┼─────┤
+│ 0 │   0 │   0 │
+├───┼─────┼─────┤
+│ 0 │   0 │   0 │
+├───┼─────┼─────┤
+│ 0 │   0 │ 100 │
+├───┼─────┼─────┤
+│ 0 │   0 │   0 │
+├───┼─────┼─────┤
+│ 0 │ 100 │   0 │
+╰───┴─────┴─────╯
+
+
+
+Pénalités par ligne : [10, 40, 1, 4, 0, 33, 0]
+Pénalités par colonne : [1, 8, 0]
+Position des arretes maximale : [1]
+Pénalité maximale : 40
+Coordonées de l'arrete rempli : [1,0]
+╭─────┬─────┬─────╮
+│   0 │   0 │   0 │
+├─────┼─────┼─────┤
+│ 100 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │   0 │ 100 │
+├─────┼─────┼─────┤
+│   0 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │ 100 │   0 │
+╰─────┴─────┴─────╯
+
+
+
+Pénalités par ligne : [10, 0, 1, 4, 0, 33, 0]
+Pénalités par colonne : [1, 8, 0]
+Position des arretes maximale : [5]
+Pénalité maximale : 33
+Coordonées de l'arrete rempli : [5,0]
+╭─────┬─────┬─────╮
+│   0 │   0 │   0 │
+├─────┼─────┼─────┤
+│ 100 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │   0 │ 100 │
+├─────┼─────┼─────┤
+│ 100 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │ 100 │   0 │
+╰─────┴─────┴─────╯
+
+
+
+Pénalités par ligne : [10, 0, 1, 4, 0, 0, 0]
+Pénalités par colonne : [3, 8, 0]
+Position des arretes maximale : [0]
+Pénalité maximale : 10
+Coordonées de l'arrete rempli : [0,1]
+╭─────┬─────┬─────╮
+│   0 │ 100 │   0 │
+├─────┼─────┼─────┤
+│ 100 │   0 │   0 │
+├─────┼─────┼─────┤
+│ 100 │   0 │   0 │
+├─────┼─────┼─────┤
+│ 100 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │   0 │ 100 │
+├─────┼─────┼─────┤
+│ 100 │   0 │   0 │
+├─────┼─────┼─────┤
+│   0 │ 100 │   0 │
+╰─────┴─────┴─────╯
+
+
+
+Le cout total de la proposition de transport initale est 5700
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [1,2] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [3,1] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───┬───╮
+│ 0 │ 1 │ 0 │
+├───┼───┼───┤
+│ 1 │ 0 │ 1 │
+├───┼───┼───┤
+│ 1 │ 0 │ 0 │
+├───┼───┼───┤
+│ 1 │ 1 │ 0 │
+├───┼───┼───┤
+│ 0 │ 0 │ 1 │
+├───┼───┼───┤
+│ 1 │ 0 │ 0 │
+├───┼───┼───┤
+│ 0 │ 1 │ 0 │
+╰───┴───┴───╯
+
+Ligne des coûts potentiels : [0, -14, -15, -18, -13, -19, -16]
+Colonne des coûts potentiels : [-24, -20, -16]
+
+--Matrice des couts potentiels :--
+╭────┬────┬────╮
+│ 24 │ 20 │ 16 │
+├────┼────┼────┤
+│ 10 │  6 │  2 │
+├────┼────┼────┤
+│  9 │  5 │  1 │
+├────┼────┼────┤
+│  6 │  2 │ -2 │
+├────┼────┼────┤
+│ 11 │  7 │  3 │
+├────┼────┼────┤
+│  5 │  1 │ -3 │
+├────┼────┼────┤
+│  8 │  4 │  0 │
+╰────┴────┴────╯
+--Matrice des couts marginaux :--
+╭────┬────┬────╮
+│  6 │  0 │ -1 │
+├────┼────┼────┤
+│  0 │ 44 │  0 │
+├────┼────┼────┤
+│  0 │  5 │ 29 │
+├────┼────┼────┤
+│  0 │  0 │ 31 │
+├────┼────┼────┤
+│ 39 │ 33 │  0 │
+├────┼────┼────┤
+│  0 │ 37 │ 30 │
+├────┼────┼────┤
+│ 42 │  0 │ 22 │
+╰────┴────┴────╯
+l'arrete la plus améliorante est : (0, 2) avec un valeur de -1

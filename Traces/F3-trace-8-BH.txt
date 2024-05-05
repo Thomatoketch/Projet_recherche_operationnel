@@ -1,0 +1,132 @@
+Bonjour, veuillez donner le numero du fichier à executé : 8
+Que voulez vous faire : 
+ 	1. Matrice des coûts 
+ 	2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport: 
+ 	1. Nord-Ouest 
+ 	2. Balas-Hammer
+2
+Pénalités par ligne : [30, 40, 15, 10, 4]
+Pénalités par colonne : [2, 12]
+Position des arretes maximale : [1]
+Pénalité maximale : 40
+Coordonées de l'arrete rempli : [1,0]
+╭─────┬───╮
+│   0 │ 0 │
+├─────┼───┤
+│ 200 │ 0 │
+├─────┼───┤
+│   0 │ 0 │
+├─────┼───┤
+│   0 │ 0 │
+├─────┼───┤
+│   0 │ 0 │
+╰─────┴───╯
+
+
+
+Pénalités par ligne : [30, 0, 15, 10, 4]
+Pénalités par colonne : [23, 12]
+Position des arretes maximale : [0]
+Pénalité maximale : 30
+Coordonées de l'arrete rempli : [0,1]
+╭─────┬─────╮
+│   0 │ 100 │
+├─────┼─────┤
+│ 200 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+╰─────┴─────╯
+
+
+
+Pénalités par ligne : [0, 0, 15, 10, 4]
+Pénalités par colonne : [23, 32]
+Position des arretes maximale : [6]
+Pénalité maximale : 32
+Coordonées de l'arrete rempli : [4,1]
+╭─────┬─────╮
+│   0 │ 100 │
+├─────┼─────┤
+│ 200 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+├─────┼─────┤
+│   0 │ 200 │
+╰─────┴─────╯
+
+
+
+Pénalités par ligne : [0, 0, 15, 10, 0]
+Pénalités par colonne : [20, 5]
+Position des arretes maximale : [5]
+Pénalité maximale : 20
+Coordonées de l'arrete rempli : [3,0]
+╭─────┬─────╮
+│   0 │ 100 │
+├─────┼─────┤
+│ 200 │   0 │
+├─────┼─────┤
+│   0 │ 100 │
+├─────┼─────┤
+│ 100 │ 100 │
+├─────┼─────┤
+│   0 │ 200 │
+╰─────┴─────╯
+
+
+
+Le cout total de la proposition de transport initale est 17600
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───╮
+│ 0 │ 1 │
+├───┼───┤
+│ 1 │ 0 │
+├───┼───┤
+│ 0 │ 1 │
+├───┼───┤
+│ 1 │ 1 │
+├───┼───┤
+│ 0 │ 1 │
+╰───┴───╯
+
+Ligne des coûts potentiels : [0, 0, 20, 25, -12]
+Colonne des coûts potentiels : [-10, -20]
+
+--Matrice des couts potentiels :--
+╭────┬────╮
+│ 10 │ 20 │
+├────┼────┤
+│ 10 │ 20 │
+├────┼────┤
+│ 30 │ 40 │
+├────┼────┤
+│ 35 │ 45 │
+├────┼────┤
+│ -2 │  8 │
+╰────┴────╯
+--Matrice des couts marginaux :--
+╭────┬────╮
+│ 40 │  0 │
+├────┼────┤
+│  0 │ 30 │
+├────┼────┤
+│ 25 │  0 │
+├────┼────┤
+│  0 │  0 │
+├────┼────┤
+│ 14 │  0 │
+╰────┴────╯
+Il n'y a pas d'arrete améliorante car toutes les valeurs de la matrice des couts marginaux sont positives
+
+
+Bonjour, veuillez donner le numero du fichier à executé : 

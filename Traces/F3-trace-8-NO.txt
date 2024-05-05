@@ -1,0 +1,68 @@
+Bonjour, veuillez donner le numero du fichier à executé : 8
+Que voulez vous faire :
+        1. Matrice des coûts
+        2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport:
+        1. Nord-Ouest
+        2. Balas-Hammer
+1
+╭─────┬─────╮
+│ 100 │   0 │
+├─────┼─────┤
+│ 200 │   0 │
+├─────┼─────┤
+│   0 │ 100 │
+├─────┼─────┤
+│   0 │ 200 │
+├─────┼─────┤
+│   0 │ 200 │
+╰─────┴─────╯
+Le cout total de la proposition de transport initale est 21600
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [4,0] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───╮
+│ 1 │ 0 │
+├───┼───┤
+│ 1 │ 0 │
+├───┼───┤
+│ 0 │ 1 │
+├───┼───┤
+│ 0 │ 1 │
+├───┼───┤
+│ 1 │ 1 │
+╰───┴───╯
+
+Ligne des coûts potentiels : [0, -40, -6, -1, -38]
+Colonne des coûts potentiels : [-50, -46]
+
+--Matrice des couts potentiels :--
+╭────┬────╮
+│ 50 │ 46 │
+├────┼────┤
+│ 10 │  6 │
+├────┼────┤
+│ 44 │ 40 │
+├────┼────┤
+│ 49 │ 45 │
+├────┼────┤
+│ 12 │  8 │
+╰────┴────╯
+--Matrice des couts marginaux :--
+╭─────┬─────╮
+│   0 │ -26 │
+├─────┼─────┤
+│   0 │  44 │
+├─────┼─────┤
+│  11 │   0 │
+├─────┼─────┤
+│ -14 │   0 │
+├─────┼─────┤
+│   0 │   0 │
+╰─────┴─────╯
+l'arrete la plus améliorante est : (0, 1) avec un valeur de -26

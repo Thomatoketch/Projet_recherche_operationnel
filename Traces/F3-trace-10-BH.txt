@@ -1,0 +1,59 @@
+Bonjour, veuillez donner le numero du fichier à executé : 10
+Que voulez vous faire : 
+ 	1. Matrice des coûts 
+ 	2. proposition de transport
+2
+Veillez choisir un algorithme pour fixer la proposition de transport: 
+ 	1. Nord-Ouest 
+ 	2. Balas-Hammer
+2
+Pénalités par ligne : [1, 18, 0]
+Pénalités par colonne : [49, 20, 9, 13, 5, 8, 16]
+Position des arretes maximale : [3]
+Pénalité maximale : 49
+Coordonées de l'arrete rempli : [1,0]
+╭─────┬───┬───┬───┬───┬───┬───╮
+│   0 │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │
+├─────┼───┼───┼───┼───┼───┼───┤
+│ 500 │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │
+├─────┼───┼───┼───┼───┼───┼───┤
+│   0 │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │
+╰─────┴───┴───┴───┴───┴───┴───╯
+
+
+
+Pénalités par ligne : [1, 0, 0]
+Pénalités par colonne : [0, 20, 15, 13, 8, 8, 17]
+Position des arretes maximale : [4]
+Pénalité maximale : 20
+Coordonées de l'arrete rempli : [0,1]
+╭─────┬─────┬─────┬─────┬─────┬─────┬─────╮
+│   0 │ 500 │   0 │   0 │   0 │   0 │   0 │
+├─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│ 500 │   0 │   0 │   0 │   0 │   0 │   0 │
+├─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│   0 │   0 │ 500 │ 500 │ 500 │ 500 │ 500 │
+╰─────┴─────┴─────┴─────┴─────┴─────┴─────╯
+
+
+
+Le cout total de la proposition de transport initale est 54000
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [0,2] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est degenere car le nombre d'arrete est different du nombre de sommet-1
+ne creer pas de cycle
+L'arrete [0,3] ne crée pas de cycle et est de poids minimum donc on l'ajoute à notre proposition.
+
+La proposition est non-degenere
+Voici une matrice qui represente les arretes faisant parti de notre nouvelle proposition non-degenere
+╭───┬───┬───┬───┬───┬───┬───╮
+│ 0 │ 1 │ 1 │ 1 │ 0 │ 0 │ 0 │
+├───┼───┼───┼───┼───┼───┼───┤
+│ 1 │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │
+├───┼───┼───┼───┼───┼───┼───┤
+│ 0 │ 0 │ 1 │ 1 │ 1 │ 1 │ 1 │
+╰───┴───┴───┴───┴───┴───┴───╯
+
