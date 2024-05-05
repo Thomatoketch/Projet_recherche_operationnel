@@ -2,7 +2,7 @@ import tabulate
 import sys
 MAX = 500000000000000
 
-def nord_ouest(provisions, commandes):
+def nord_ouest(provisions, commandes, ecriture):
     n = len(provisions)
     m = len(commandes)
 
@@ -23,12 +23,13 @@ def nord_ouest(provisions, commandes):
             i += 1
         if commandes[j] == 0:
             j += 1
-    print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
+    if ecriture:
+        print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
     return proposition
 
 
 
-def balas_hammer(provisions, commandes, couts, ):
+def balas_hammer(provisions, commandes, couts, ecriture):
     n = len(provisions)
     m = len(commandes)
     temp =[]
@@ -44,10 +45,11 @@ def balas_hammer(provisions, commandes, couts, ):
     while True:
         choix_penalité = {}
         penalites_lignes, penalites_colonnes, penalite_max, penalites_multiples = calculer_penalites_balas_hammer(couts, provisions, commandes, matrice_rempli)
-        print("Pénalités par ligne :", penalites_lignes)
-        print("Pénalités par colonne :", penalites_colonnes)
-        print("Position des arretes maximale :", penalites_multiples)
-        print("Pénalité maximale :", penalite_max)
+        if ecriture:
+            print("Pénalités par ligne :", penalites_lignes)
+            print("Pénalités par colonne :", penalites_colonnes)
+            print("Position des arretes maximale :", penalites_multiples)
+            print("Pénalité maximale :", penalite_max)
         
         if len(penalites_multiples) > 1:
             for ligne in penalites_multiples :
@@ -98,7 +100,8 @@ def balas_hammer(provisions, commandes, couts, ):
                 min_i = temp.index(min_cout)
                 min_j = m
 
-        print(f"Coordonées de l'arrete rempli : [{min_i},{min_j}]")
+        if ecriture:
+            print(f"Coordonées de l'arrete rempli : [{min_i},{min_j}]")
         n = len(provisions)
         m = len(commandes)
         temp = []
@@ -137,9 +140,9 @@ def balas_hammer(provisions, commandes, couts, ):
                 commandes[j] -= quantite
                 matrice_rempli[i][j] = 1
         
-
-        print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
-        print("\n\n")
+        if ecriture:
+            print(tabulate.tabulate(proposition, tablefmt="rounded_grid"))
+            print("\n\n")
         
         if (matrice_rempli == [[1] * m for _ in range(n)] or (provisions == [[0] for _ in range(n)] and commandes == [[0] for _ in range(m)])):
             return proposition
@@ -293,7 +296,6 @@ def calcul_des_potentiels(couts, matrice_arrete):
         for i in range(n):
             for j in range(m):
                 if matrice_arrete[i][j] != 0:
-
                     if potentiels_lignes[i] == -MAX and potentiels_colonnes[j] != -MAX:
                         potentiels_lignes[i] = couts[i][j] + potentiels_colonnes[j]
                     elif potentiels_colonnes[j] == -MAX and potentiels_lignes[i] != -MAX:

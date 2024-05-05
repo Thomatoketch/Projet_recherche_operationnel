@@ -3,6 +3,7 @@ from pprint import pprint
 import tabulate
 from function import *
 from complexite import *
+import time
 
 restart = ""
 
@@ -49,9 +50,9 @@ while restart != "exit" :
             choix = input()
             match choix :
                 case "1":
-                    proposition_transport = nord_ouest(provisions,commandes)
+                    proposition_transport = nord_ouest(provisions,commandes,True)
                 case "2":
-                    proposition_transport = balas_hammer(provisions,commandes,matrice_couts)
+                    proposition_transport = balas_hammer(provisions,commandes,matrice_couts,True)
             if proposition_transport != [] :
                 couts_total(proposition_transport,matrice_couts)
 
@@ -92,21 +93,52 @@ while restart != "exit" :
                     print(f"l'arrete la plus améliorante est : {arrete} avec un valeur de {minimum}")
 
         case "3":
+            max_temps_NO = 0
+            max_temps_Marche_pied_NO = 0
+            total_temps_NO = 0
+            total_temps_Marche_pied_NO = 0
             # Exemple d'utilisation avec une taille de problème de transport de 3x3
-            n = int(input("Veillez donner la taille de la matrice : "))
-            couts_transport, provisions, commandes = generer_probleme_transport(n)
+            n = 100
+            m= 3
+            for i in range(m):
+                try :
+                    matrice_couts, provisions, commandes = generer_probleme_transport(n)
 
-            print("Matrice des coûts de transport:")
-            print(tabulate.tabulate(couts_transport, tablefmt="rounded_grid"))
-            print("Provisions:", provisions)
-            print("Commandes:", commandes)
+                    temps_NO = time.time()
+                    proposition_transport = balas_hammer(provisions,commandes,matrice_couts,False)
+                    temps_NO = time.time() - temps_NO
 
-            temps_NO = time.clock()
-            proposition_transport = nord_ouest(provisions, commandes)
-            temps_NO = temps_NO - time.clock()
+                    temps_Marche_pied_NO = time.time()
+                    degenere = verification_non_degenere(proposition_transport)
+                    matrice_arrete_ajoute = clone_matrice(proposition_transport)
 
-            temps_BH = time.clock()
-            proposition_transport = balas_hammer(provisions, commandes, couts_transport)
-            temps_BH = temps_BH - time.clock()
+                    while degenere != 0:
+                        if degenere == 1:
+                            cout_arrete, arrete_non_degenere = choix_point_cycle(matrice_arrete_ajoute, matrice_couts)
+                            matrice_arrete_ajoute[arrete_non_degenere[0]][arrete_non_degenere[1]] = 1
+                        else:
+                            proposition_transport = maximisation_transport(proposition_transport)
+                        degenere = verification_non_degenere(matrice_arrete_ajoute)
 
+                    potentiels_lignes, potentiels_colonnes = calcul_des_potentiels(matrice_couts, matrice_arrete_ajoute)
+
+                    matrice_potentiels = calcul_matrice_couts_potentiels(potentiels_lignes, potentiels_colonnes)
+
+                    matrice_marginaux = calcul_matrice_couts_marginaux(matrice_potentiels, matrice_couts)
+
+                    minimum, arrete = arrete_ameliorante(matrice_marginaux)
+                    temps_Marche_pied_NO = time.time() - temps_Marche_pied_NO
+                    if temps_NO > max_temps_NO :
+                        max_temps_NO = temps_NO
+                    if temps_Marche_pied_NO > max_temps_Marche_pied_NO :
+                        max_temps_Marche_pied_NO = temps_Marche_pied_NO
+                    total_temps_NO += temps_NO
+                    total_temps_Marche_pied_NO += temps_Marche_pied_NO
+                except (RuntimeError, TypeError, NameError):
+                    pass
+            print(total_temps_NO/m)
+            print(total_temps_Marche_pied_NO/m)
+            print(max_temps_NO)
+            print(max_temps_Marche_pied_NO)
+    break
     print("\n")
