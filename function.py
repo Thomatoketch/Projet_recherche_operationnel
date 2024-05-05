@@ -405,3 +405,14 @@ def clone_matrice(matrice):
                 nouvelle_ligne.append(0)
         clone.append(nouvelle_ligne)
     return clone
+
+
+def couts_total(proposition, couts):
+    n = len(proposition)
+    m = len(proposition[0])
+    total = 0
+
+    for i in range(n):
+        for j in range(m):
+            total += proposition[i][j] * couts[i][j]
+    print(f"Le cout total de la proposition de transport initale est {total}\n")

@@ -32,7 +32,7 @@ while restart != "exit" :
     commandes = matrice[-1]
 
 
-    print("Que voulez vous faire : \n \t1. Matrice des coûts \n \t2. proposition de transport\n \t3. table des couts potentiels\n \t4. table des couts marginaux")
+    print("Que voulez vous faire : \n \t1. Matrice des coûts \n \t2. proposition de transport")
     restart = input()
     proposition_transport = []
     match restart :
@@ -50,6 +50,8 @@ while restart != "exit" :
                     proposition_transport = nord_ouest(provisions,commandes)
                 case "2":
                     proposition_transport = balas_hammer(provisions,commandes,matrice_couts)
+            couts_total(proposition_transport,matrice_couts)
+
             degenere = verification_non_degenere(proposition_transport)
             matrice_arrete_ajoute = clone_matrice(proposition_transport)
 
